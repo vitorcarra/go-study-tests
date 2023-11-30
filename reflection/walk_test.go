@@ -101,6 +101,44 @@ func TestWalk(t *testing.T) {
 		assertContains(t, got, "Moo")
 		assertContains(t, got, "Baa")
 	})
+
+	t.Run("with channels", func(t *testing.T) {
+		ch := make(chan Profile)
+
+		go func() {
+			ch <- Profile{33, "Chris"}
+			ch <- Profile{34, "John"}
+			close(ch)
+		}()
+
+		var got []string
+		want := []string{"Chris", "John"}
+
+		Walk(ch, func(input string) {
+			got = append(got, input)
+		})
+
+		if !reflect.DeepEqual(want, got) {
+			t.Errorf("got %v but want %v", got, want)
+		}
+	})
+
+	t.Run("with function", func(t *testing.T) {
+		fn := func() (Profile, Profile) {
+			return Profile{33, "A"}, Profile{34, "B"}
+		}
+
+		var got []string
+		want := []string{"A", "B"}
+
+		Walk(fn, func(input string) {
+			got = append(got, input)
+		})
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("want %v but got %v", want, got)
+		}
+	})
 }
 
 type Person struct {
