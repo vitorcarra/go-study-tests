@@ -4,13 +4,13 @@ import "strings"
 
 // RomanNumeral represents a Roman numeral with its corresponding value and symbol.
 type RomanNumeral struct {
-	Value  int    // The numerical value of the Roman numeral.
+	Value  uint16 // The numerical value of the Roman numeral.
 	Symbol string // The symbol representation of the Roman numeral.
 }
 
 type RomanNumerals []RomanNumeral
 
-func (r RomanNumerals) ValueOf(symbols ...byte) int {
+func (r RomanNumerals) ValueOf(symbols ...byte) uint16 {
 	symbol := string(symbols)
 	for _, s := range r {
 		if s.Symbol == symbol {
@@ -38,7 +38,7 @@ var allRomanNumerals = RomanNumerals{
 }
 
 // ConvertToRoman converts an integer to its Roman numeral representation.
-func ConvertToRoman(n int) string {
+func ConvertToRoman(n uint16) string {
 	var result strings.Builder
 
 	for _, numeral := range allRomanNumerals {
@@ -51,8 +51,8 @@ func ConvertToRoman(n int) string {
 	return result.String()
 }
 
-func ConvertToArabic(roman string) int {
-	total := 0
+func ConvertToArabic(roman string) uint16 {
+	var total uint16 = 0
 
 	for i := 0; i < len(roman); i++ {
 		symbol := roman[i]
